@@ -1,2 +1,2 @@
 # Team777
-PintOS CC&
+PintOS CC7

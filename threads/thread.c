@@ -21,7 +21,7 @@
 #define THREAD_MAGIC 0xcd6abf4b
 /*--------------- Fase 1 --------------------*/
 /*Listar threads en espera a que termine de estar en sleep*/
-static struct list lista_espera[PRI_MAX + 1];
+static struct list listaEspera[PRI_MAX + 1];
 /*--------------- Fase 1 --------------------*/
 
 /* List of processes in THREAD_READY state, that is, processes
@@ -75,6 +75,31 @@ static void schedule (void);
 void thread_schedule_tail (struct thread *prev);
 static tid_t allocate_tid (void);
 
+/*--------------- Fase 1 --------------------*/
+void
+insert_en_listaEspera(int64_t ticks)
+{
+  /*Deshabilitar interrupciones*/
+  enum intr_level old_level;
+  old_level = intr_disable ();
+
+  /*Remover el thread actual de "ready_list" e insertarlo en "listaEspera"
+  Cambiar su estatus a THREAD_BLOCKED, y definir su tiempo de expiracion*/
+  struct thread *thread_actual = thread_current();
+  thread_actual->sleepThread = timer_ticks() + ticks;
+  
+  /*Donde "sleepThread" es el atributo de la estructura thread que usted
+    definió como paso inicial*/
+  list_push_back(&listaEspera, &thread_actual->elem);
+  thread_block();
+
+  //Habilitar interrupciones
+  intr_set_level (old_level);
+}
+
+/*--------------- Fase 1 --------------------*/
+
+
 /* Initializes the threading system by transforming the code
    that's currently running into a thread.  This can't work in
    general and it is possible in this case only because loader.S
@@ -97,7 +122,7 @@ thread_init (void)
   list_init (&ready_list);
   list_init (&all_list);
   /*--------------- Fase 1 --------------------*/
-  list_init (&lista_espera);
+  list_init (&listaEspera);
   /*--------------- Fase 1 --------------------*/
 
   /* Set up a thread structure for the running thread. */

@@ -110,6 +110,9 @@ struct thread
    Controlled by kernel command-line option "-o mlfqs". */
 extern bool thread_mlfqs;
 
+/*--------------- Fase 1 --------------------*/
+void insert_en_listaEspera(int64_t ticks)
+/*--------------- Fase 1 --------------------*/
 void thread_init (void);
 void thread_start (void);
 

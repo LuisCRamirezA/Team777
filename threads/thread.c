@@ -19,6 +19,10 @@
    Used to detect stack overflow.  See the big comment at the top
    of thread.h for details. */
 #define THREAD_MAGIC 0xcd6abf4b
+/*--------------- Fase 1 --------------------*/
+/*Listar threads en espera a que termine de estar en sleep*/
+static struct list lista_espera[PRI_MAX + 1];
+/*--------------- Fase 1 --------------------*/
 
 /* List of processes in THREAD_READY state, that is, processes
    that are ready to run but not actually running. */
@@ -92,6 +96,9 @@ thread_init (void)
   lock_init (&tid_lock);
   list_init (&ready_list);
   list_init (&all_list);
+  /*--------------- Fase 1 --------------------*/
+  list_init (&lista_espera);
+  /*--------------- Fase 1 --------------------*/
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();

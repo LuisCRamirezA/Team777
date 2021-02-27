@@ -111,7 +111,8 @@ struct thread
 extern bool thread_mlfqs;
 
 /*--------------- Fase 1 --------------------*/
-void insert_en_listaEspera(int64_t ticks)
+void insert_en_listaEspera(int64_t ticks);
+void remover_thread_durmiente(int64_t ticks);
 /*--------------- Fase 1 --------------------*/
 void thread_init (void);
 void thread_start (void);

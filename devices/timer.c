@@ -177,6 +177,9 @@ timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
   thread_tick ();
+  /*--------------- Fase 1 --------------------*/
+  remover_thread_durmiente(ticks);
+  /*--------------- Fase 1 --------------------*/
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer

@@ -97,6 +97,29 @@ insert_en_listaEspera(int64_t ticks)
   intr_set_level (old_level);
 }
 
+void
+remover_thread_durmiente(int64_t ticks)
+{
+  /*Cuando ocurra un timer_interrupt, si el tiempo del thread ha expirado
+  Se mueve de regreso a ready_list, con la funcion thread_unblock*/
+  
+  //Iterar sobre "listaEspera"
+  struct list_elem *iter = list_begin(&listaEspera);
+  while(iter != list_end(&listaEspera) ){
+    struct thread *thread_lista_espera= list_entry(iter, struct thread, elem);
+    
+    /*Si el tiempo global es mayor al tiempo que el thread permanecía dormido
+      entonces su tiempo de dormir ha expirado*/
+    if(ticks >= thread_lista_espera->sleepThread){
+      //Lo removemos de "listaEspera" y lo regresamos a ready_list
+      iter = list_remove(iter);
+      thread_unblock(thread_lista_espera);
+    }else{
+      //Sino, seguir iterando
+      iter = list_next(iter);
+    }
+  }
+}
 /*--------------- Fase 1 --------------------*/
 
 
